@@ -19,5 +19,5 @@ include_directories( ./src )
 add_executable( web_server ./src/main.cpp )
 
 # external libs
-add_library(Server server.cpp)
+add_library(Server ./src/server.cpp)
 target_link_libraries( web_server Server )
