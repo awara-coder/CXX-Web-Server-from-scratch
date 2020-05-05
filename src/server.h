@@ -22,7 +22,7 @@ namespace server {
         ~Server(void);
         int status(void);
         int createServer(int port);
-
+        void closeServer(void);
     };
 
 }

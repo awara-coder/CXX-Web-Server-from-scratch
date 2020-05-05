@@ -90,7 +90,22 @@ int server::Server::createServer(const int PORT)
         exit(1);
     }
     status_ = 1;
-    std::cout << "server : Server running at port " << PORT << " and IP " << server_address.sin_addr.s_addr << std::endl;
+    std::cout << "server : Server running at port " << PORT << std::endl;
 
     return 0;
+}
+
+/**
+ * Shuts down the server and releases the socket
+ * server is bound to.
+ */
+void server::Server::closeServer(void) 
+{
+    if (status_ == 1) 
+    {
+        status_ = 0;
+
+        // close the socket file descriptor
+        close(sockfd);
+    }
 }
