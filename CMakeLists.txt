@@ -20,4 +20,7 @@ add_executable( web_server ./src/main.cpp )
 
 # external libs
 add_library(Server ./src/server.cpp)
-target_link_libraries( web_server Server )
+add_library(HTTPParser ./src/http_parser.cpp)
+add_library(File ./src/file.cpp)
+add_library(Worker ./src/worker.cpp)
+target_link_libraries( web_server Server HTTPParser File Worker)

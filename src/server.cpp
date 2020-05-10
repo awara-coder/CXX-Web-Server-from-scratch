@@ -1,11 +1,14 @@
 #pragma once
 #include "server.h"
+#include "http_parser.h"
+#include "worker.h"
 #include <iostream>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 
 /**
  * Server
@@ -22,7 +25,6 @@
 server::Server::Server()
 {
     status_ = 0;
-    backlog_queue_size = 10;
 
     // clear address structure to store server address
     bzero((char *)&server_address, sizeof server_address); // string.h
@@ -35,10 +37,10 @@ server::Server::~Server(void)
 {
     if (status_ == 1)
     {
-        std::cout << "Shutting down Server" << std::endl;
+        std::cout << "server: Shutting down Server" << std::endl;
 
         // Close the socket File Descriptor
-        close(sockfd);
+        close(server_socket_file_descriptor_);
     }
 }
 
@@ -59,11 +61,11 @@ int server::Server::status()
  */
 int server::Server::createServer(const int PORT)
 {
-    // Create a new socket and store file descriptor in sockfd
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0)
+    // Create a new socket and store file descriptor in server_socket_file_descriptor_
+    server_socket_file_descriptor_ = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_socket_file_descriptor_ < 0)
     {
-        std::cerr << "ERROR, unable to open socket" << std::endl;
+        std::cerr << "ERROR: unable to open socket" << std::endl;
         exit(1);
     }
 
@@ -81,16 +83,16 @@ int server::Server::createServer(const int PORT)
     server_address.sin_port = htons(PORT);
 
     // bind the socked to current host's IP address with PORT as port no.
-    int bind_status = bind(sockfd, (struct sockaddr *)&server_address, sizeof server_address);
+    int bind_status = bind(server_socket_file_descriptor_, (struct sockaddr *)&server_address, sizeof server_address);
 
     if (bind_status < 0)
     {
-        close(sockfd);
-        std::cerr << "ERROR, unable to bind socket to port" << std::endl;
+        close(server_socket_file_descriptor_);
+        std::cerr << "ERROR: unable to bind socket to port" << std::endl;
         exit(1);
     }
     status_ = 1;
-    std::cout << "server : Server running at port " << PORT << std::endl;
+    std::cout << "server: Server running at port " << PORT << std::endl;
 
     return 0;
 }
@@ -106,6 +108,36 @@ void server::Server::closeServer(void)
         status_ = 0;
 
         // close the socket file descriptor
-        close(sockfd);
+        close(server_socket_file_descriptor_);
+    }
+}
+
+/**
+ * Starts listening to the port and accepting incoming requests.
+ */
+void server::Server::startAcceptingConnections(int backLogQueueSize = 10) 
+{
+    if (listen(server_socket_file_descriptor_, backLogQueueSize) == -1) 
+    {
+        std::cerr << "ERROR: Unable to get listening socket" << std::endl;
+        exit(1);
+    }
+    status_ = 2;
+    std::cout << "server: Starting to accept Connections" << std::endl;
+
+    // Warning, Blocking Code
+    while(true) 
+    {
+        // Address structure to store Client's address
+        struct sockaddr_in  clientAddress;  
+        socklen_t socketLength = sizeof(clientAddress);
+        int clientSocketFileDescriptor = accept(server_socket_file_descriptor_,
+                                                (struct sockaddr *) &clientAddress,
+                                                (socklen_t *) &socketLength);
+        std::cout << "server : new connection from " 
+                << inet_ntoa(clientAddress.sin_addr) 
+                << " port " << ntohs(clientAddress.sin_port) 
+                << std::endl;
+        worker::handleHTTPRequest(clientSocketFileDescriptor); 
     }
 }

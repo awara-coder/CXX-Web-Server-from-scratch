@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
     // Create a Server Instance
     server::Server web_server;
     web_server.createServer(PORT);
+    web_server.startAcceptingConnections(100);
     web_server.closeServer();
-    
     // Unreachable code
     return 0;
 }
