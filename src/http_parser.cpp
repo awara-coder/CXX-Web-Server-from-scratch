@@ -267,7 +267,7 @@ std::string http::HTTPResponse::generateResponse(file::FileData *requestedFile)
     // Add a blank line to separate body of message
     responseMessage += END_LINE;
 
-    if (status_code_ != "400")
+    if (status_code_ != "404")
     {
         // Add the body of message
         responseMessage += std::string(requestedFile->data);

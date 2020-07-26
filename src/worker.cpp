@@ -33,7 +33,7 @@ void worker::handleHTTPRequest(int clientSocketFileDescriptor)
         file::FileData *requestedFile = file::openFile(filePath);
         if (requestedFile == NULL)
         {
-            response.set_status_code("400");
+            response.set_status_code("404");
         }
         else
         {
@@ -61,7 +61,7 @@ void worker::handleHTTPRequest(int clientSocketFileDescriptor)
         response.add_header("Content-Encoding", "identity");
         
         // Add Content-Length header only when file is present.
-        if (response.get_status_code() != 400) 
+        if (response.get_status_code() != 404) 
         {
             // Content-Length
             response.add_header("Content-Length", std::to_string(requestedFile ->sizeOfFile));
