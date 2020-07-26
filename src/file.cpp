@@ -2,6 +2,7 @@
  * Definitions for the file.h Header File
  */
 
+#pragma once
 #include "file.h"
 #include <stdio.h>
 #include <stdlib.h>

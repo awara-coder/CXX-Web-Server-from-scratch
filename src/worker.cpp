@@ -1,13 +1,14 @@
 #pragma once
 #include "worker.h"
 #include "http_parser.h"
-#include "server.h"
-#include "file.h"
 #include <iostream>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <time.h>
+
+
+#define BUFFER_SIZE 65536 // 64K
 
 /**
  * Takes the Socket File descriptor and handles the HTTP Request

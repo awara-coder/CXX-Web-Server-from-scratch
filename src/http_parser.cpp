@@ -1,6 +1,7 @@
 /**
  * Definitions for declarations in http_parser.h
  */
+#pragma once
 #include "http_parser.h"
 #include "file.h"
 #include <iostream>

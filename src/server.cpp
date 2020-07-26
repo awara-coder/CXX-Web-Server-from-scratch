@@ -1,6 +1,5 @@
 #pragma once
 #include "server.h"
-#include "http_parser.h"
 #include "worker.h"
 #include <iostream>
 #include <string.h>

@@ -3,7 +3,7 @@
  */
 
 #include <iostream>
-#include <server.h>
+#include "server.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
     web_server.createServer(PORT);
     web_server.startAcceptingConnections(100);
     web_server.closeServer();
+
     // Unreachable code
     return 0;
 }
