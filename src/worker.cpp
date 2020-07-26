@@ -59,12 +59,20 @@ void worker::handleHTTPRequest(int clientSocketFileDescriptor)
 
         // Content-Encoding
         response.add_header("Content-Encoding", "identity");
+        
+        // Add Content-Length header only when file is present.
+        if (response.get_status_code() != 400) 
+        {
+            // Content-Length
+            response.add_header("Content-Length", std::to_string(requestedFile ->sizeOfFile));
 
-        // Content-Length
-        response.add_header("Content-Length", std::to_string(requestedFile ->sizeOfFile));
-
-        // Content-Type
-        response.add_header("Content-Type", http::getMIMEType(filePath));
+            // Content-Type
+            response.add_header("Content-Type", http::getMIMEType(filePath));
+        }
+        else 
+        {
+            response.add_header("Content-Length", "0"); // empty content
+        }
         // Server
         response.add_header("Server", "Legion");
 
