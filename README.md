@@ -1,6 +1,6 @@
 # C++ Web Server from scratch.
 
-This project is a Static Web server which serves files and is written from scratch. It is written in C++ and uses CMake for managing dependencies.
+This project is a Static Web server that serves files and is written from scratch. It is written in C++ and uses CMake for managing dependencies.
 ### Building for source
 Clone the repository on your local system and open the root project directory in your favourite terminal.
 Create a new folder to output MakeFile and executable.
