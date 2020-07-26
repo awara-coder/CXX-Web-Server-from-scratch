@@ -42,6 +42,7 @@ namespace http
     public:
         HTTPResponse(http::HTTPRequest &);
         void set_status_code(const std::string &);
+        int get_status_code(void);
         void add_header(std::string, std::string);
         void set_body(char *);
         void set_content_length(int);

@@ -272,3 +272,7 @@ std::string http::HTTPResponse::generateResponse(file::FileData *requestedFile)
     
     return responseMessage;
 }
+
+int http::HTTPResponse::get_status_code(void) {
+    return stoi(status_code_);
+}
